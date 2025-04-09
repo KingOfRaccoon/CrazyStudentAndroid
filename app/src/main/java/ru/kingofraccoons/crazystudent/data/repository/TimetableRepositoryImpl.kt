@@ -1,0 +1,58 @@
+package ru.kingofraccoons.crazystudent.data.repository
+
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import ru.kingofraccoons.crazystudent.data.source.TimetableService
+import ru.kingofraccoons.crazystudent.domain.entity.request.EventRequest
+import ru.kingofraccoons.crazystudent.domain.entity.request.EventUpdate
+import ru.kingofraccoons.crazystudent.domain.entity.response.PlanResponse
+import ru.kingofraccoons.crazystudent.domain.entity.response.timetable.Group
+import ru.kingofraccoons.crazystudent.domain.entity.response.timetable.Teacher
+import ru.kingofraccoons.crazystudent.domain.repository.TimetableRepository
+import ru.kingofraccoons.crazystudent.domain.util.Resource
+
+class TimetableRepositoryImpl(private val timetableService: TimetableService) :
+    TimetableRepository {
+    private val _timetableFlow = MutableStateFlow<Resource<PlanResponse>>(Resource.Loading())
+    override val timetableFlow = _timetableFlow.asStateFlow()
+
+    private val _groupsFlow = MutableStateFlow<Resource<List<Group>>>(Resource.Loading())
+    override val groupsFlow = _groupsFlow.asStateFlow()
+
+    private val _teachersFlow = MutableStateFlow<Resource<List<Teacher>>>(Resource.Loading())
+    override val teachersFlow = _teachersFlow.asStateFlow()
+
+    override suspend fun loadTimetable(userId: Int, date: String) {
+        _timetableFlow.update {
+            timetableService.getTimetable(userId, date)
+        }
+    }
+
+    override suspend fun loadGroups() {
+        _groupsFlow.update {
+            timetableService.getGroups()
+        }
+    }
+
+    override suspend fun loadTeachers() {
+        _teachersFlow.update {
+            timetableService.getTeachers()
+        }
+    }
+
+    override suspend fun loadEvents() {
+
+    }
+
+    override suspend fun addEvents(
+        userId: Int,
+        eventRequest: EventRequest,
+    ): Resource<String> {
+        return timetableService.addEvents(userId, eventRequest)
+    }
+
+    override suspend fun updateEvent(eventUpdate: EventUpdate): Resource<String> {
+        return timetableService.updateEvent(eventUpdate)
+    }
+}
