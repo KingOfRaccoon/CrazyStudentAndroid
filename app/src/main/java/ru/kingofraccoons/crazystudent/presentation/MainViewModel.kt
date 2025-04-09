@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import ru.kingofraccoons.crazystudent.data.source.TimetableService
+import ru.kingofraccoons.crazystudent.data.network.TimetableService
 import ru.skittens.prostoleti.data.util.DataTime
 
 class MainViewModel(private val timetableService: TimetableService) {

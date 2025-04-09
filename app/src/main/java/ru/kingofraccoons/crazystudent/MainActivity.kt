@@ -19,8 +19,8 @@ import ru.kingofraccoons.crazystudent.presentation.navigation.MainNavigation
 import ru.kingofraccoons.crazystudent.presentation.theme.AppTheme
 import ru.kingofraccoons.crazystudent.presentation.routes.GroupRoutes
 import ru.kingofraccoons.crazystudent.presentation.routes.ScreenRoutes
-import ru.kingofraccoons.crazystudent.presentation.screens.start.RegistrationScreen
-import ru.kingofraccoons.crazystudent.presentation.screens.start.SplashScreen
+import ru.kingofraccoons.crazystudent.presentation.screens.start.registration.RegistrationScreen
+import ru.kingofraccoons.crazystudent.presentation.screens.start.splash.SplashScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,14 +48,14 @@ fun App() = AppTheme {
             composable(ScreenRoutes.Start.Splash.name) {
                 SplashScreen(
                     { navigator.navigate(ScreenRoutes.Start.Authorization.name) },
-                    { navigator.navigate(ScreenRoutes.Student.MainStudent.name) },
-                    { navigator.navigate(ScreenRoutes.Enrollee.MainEnrollee.name) }
+                    { navigator.navigate(ScreenRoutes.Start.Registration.name) },
+                    { navigator.navigate(ScreenRoutes.Student.MainStudent.name) }
                 )
             }
             composable(ScreenRoutes.Start.Authorization.name) {
                 AuthorizationScreen(
                     { navigator.navigate(ScreenRoutes.Start.Registration.name) },
-                    { navigator.navigate("main") },
+                    { navigator.navigate(ScreenRoutes.Student.MainStudent.name) },
                     { navigator.navigate(ScreenRoutes.Enrollee.MainEnrollee.name) }
                 )
             }
@@ -67,7 +67,7 @@ fun App() = AppTheme {
                 )
             }
         }
-        composable("main") {
+        composable(ScreenRoutes.Student.MainStudent.name) {
             MainNavigation(navigator)
         }
         composable(ScreenRoutes.Enrollee.MainEnrollee.name) {

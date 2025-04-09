@@ -1,4 +1,4 @@
-package ru.kingofraccoons.crazystudent.data.source
+package ru.kingofraccoons.crazystudent.data.network
 
 import io.ktor.http.HttpHeaders
 import ru.kingofraccoons.crazystudent.data.util.Postman
@@ -9,7 +9,7 @@ import ru.kingofraccoons.crazystudent.domain.entity.response.userdata.User
 import ru.kingofraccoons.crazystudent.domain.util.Resource
 
 class UserService(private val postman: Postman) {
-    private val baseUrl = "89.223.121.212:8084/"
+    private val baseUrl = "http://89.223.121.212:8084/"
     private val loginTag = "login"
     private val loginOnTokenTag = "loginOnToken"
     private val registrationTag = "registration"

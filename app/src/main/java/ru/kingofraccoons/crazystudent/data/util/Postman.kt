@@ -20,7 +20,7 @@ import kotlinx.serialization.json.Json
 import ru.kingofraccoons.crazystudent.domain.util.Resource
 
 class Postman() {
-    private val json = Json { coerceInputValues = true; ignoreUnknownKeys = true }
+    val json = Json { coerceInputValues = true; ignoreUnknownKeys = true }
     val semaphore = Semaphore(20)
     val httpClient = HttpClient(CIO) {
         install(ContentNegotiation) {

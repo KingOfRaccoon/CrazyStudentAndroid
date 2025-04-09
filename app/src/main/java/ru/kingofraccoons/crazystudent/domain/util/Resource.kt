@@ -17,8 +17,10 @@ sealed class Resource<T>(
         override val message: String,
         override val status: Int = 404,
         override var data: T? = null,
-    ) :
-        Resource<T>(data, message)
+    ) : Resource<T>(data, message)
+
+
+    fun isSuccess() = this is Success
 
     /** Static fields **/
     enum class ErrorsRequest(val desc: String) {

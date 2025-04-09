@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ru.kingofraccoons.crazystudent.R
@@ -25,11 +24,11 @@ import ru.kingofraccoons.crazystudent.presentation.screens.main.profile.student.
 import ru.kingofraccoons.crazystudent.presentation.screens.main.profile.student.StudentProfileScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.profile.student.StudyPlaneScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.schedule.EventsScreen
-import ru.skittens.prostoleti.presentation.screens.main.schedule.ScheduleScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.service.InternshipScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.service.SelectHousingScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.service.ServicesScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.vacancy.VacanciesScreen
+import ru.skittens.prostoleti.presentation.screens.main.schedule.ScheduleScreen
 
 fun NavGraphBuilder.StudentMainNavigation(navigator: NavHostController) {
     navigation(ScreenRoutes.Student.Schedule.name, GroupRoutes.ScheduleStudent.name) {
@@ -85,7 +84,7 @@ fun NavGraphBuilder.StudentMainNavigation(navigator: NavHostController) {
             InternshipScreen()
         }
 
-        composable(ScreenRoutes.Student.Vacancies.name){
+        composable(ScreenRoutes.Student.Vacancies.name) {
             VacanciesScreen()
         }
 
@@ -103,7 +102,9 @@ fun NavGraphBuilder.MainNavigation(navigator: NavHostController) {
     Scaffold(
         contentColor = Color.Black,
         containerColor = Color.Black,
-        modifier = Modifier.fillMaxSize().systemBarsPadding(),
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding(),
         bottomBar = {
             NavigationBar(containerColor = Color.Black, contentColor = Color.Black) {
                 NavigationBarItem(
@@ -124,8 +125,8 @@ fun NavGraphBuilder.MainNavigation(navigator: NavHostController) {
             }
         }
     ) {
-        NavHost(navigator, GroupRoutes.ScheduleStudent.name) {
-            StudentMainNavigation(navigator)
-        }
+//        NavHost(navigator, GroupRoutes.ScheduleStudent.name) {
+        StudentMainNavigation(navigator)
+//        }
     }
 }

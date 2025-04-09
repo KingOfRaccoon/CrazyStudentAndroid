@@ -1,4 +1,4 @@
-package ru.kingofraccoons.crazystudent.data.source
+package ru.kingofraccoons.crazystudent.data.network
 
 import ru.kingofraccoons.crazystudent.data.util.Postman
 import ru.kingofraccoons.crazystudent.domain.entity.request.EventRequest
@@ -10,7 +10,7 @@ import ru.kingofraccoons.crazystudent.domain.entity.response.timetable.Teacher
 import ru.kingofraccoons.crazystudent.domain.util.Resource
 
 class TimetableService(private val postman: Postman) {
-    private val baseUrl = "89.223.121.212:8084/"
+    private val baseUrl = "http://89.223.121.212:8084/"
     private val timetableTag = "timetable"
     private val eventsTag = "events"
 

@@ -11,7 +11,8 @@ interface UserRepository {
     val userFlow: StateFlow<Resource<User>>
 
     suspend fun login(loginRequest: LoginRequest)
-    suspend fun loginOnToken(token: String)
+    suspend fun loginOnToken()
     suspend fun registration(registrationRequest: RegistrationUserRequest)
     suspend fun updateUser(updateUserRequest: UpdateUserRequest)
+    fun getToken(): String?
 }

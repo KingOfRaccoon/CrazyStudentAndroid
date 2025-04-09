@@ -8,4 +8,8 @@ data class Teacher(
 	val aisId: Int,
 	val fio: String? = null,
 	val degree: String? = null
-)
+): FilterUnit {
+	override fun getFilter() = fio ?: "id: $id"
+
+	override fun getFilterForServer() = "prep$aisId"
+}

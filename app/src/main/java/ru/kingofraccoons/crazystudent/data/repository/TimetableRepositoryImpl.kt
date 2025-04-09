@@ -3,7 +3,7 @@ package ru.kingofraccoons.crazystudent.data.repository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import ru.kingofraccoons.crazystudent.data.source.TimetableService
+import ru.kingofraccoons.crazystudent.data.network.TimetableService
 import ru.kingofraccoons.crazystudent.domain.entity.request.EventRequest
 import ru.kingofraccoons.crazystudent.domain.entity.request.EventUpdate
 import ru.kingofraccoons.crazystudent.domain.entity.response.PlanResponse
