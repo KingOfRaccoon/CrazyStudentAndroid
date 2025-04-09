@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.kingofraccoons.crazystudent.NavigationFun
 import ru.kingofraccoons.crazystudent.R
+import ru.kingofraccoons.crazystudent.presentation.elements.BodyText
 import ru.kingofraccoons.crazystudent.presentation.elements.HeadlineText
 import ru.kingofraccoons.crazystudent.presentation.elements.LargeTitleText
 import ru.kingofraccoons.crazystudent.presentation.elements.Title1Text
@@ -91,9 +92,11 @@ fun ServicesScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                HeadlineText("Учеба и карьера", Modifier)
-                Title1Text("Все", Modifier, color = Color(0xFF70DDFF))
+                BodyText("Учеба и карьера", Modifier)
+                BodyText("Все", Modifier, color = Color(0xFF70DDFF))
             }
+            Spacer(modifier = Modifier.height(16.dp))
+
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -147,9 +150,11 @@ fun ServicesScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                HeadlineText("Жизнь и досуг", Modifier)
-                Title1Text("Все", Modifier, color = Color(0xFF70DDFF))
+                BodyText("Жизнь и досуг", Modifier)
+                BodyText("Все", Modifier, color = Color(0xFF70DDFF))
             }
+            Spacer(modifier = Modifier.height(16.dp))
+
             Row(Modifier.fillMaxWidth(), Arrangement.spacedBy(8.dp)) {
                 CuteCard(
                     modifier = Modifier
@@ -215,11 +220,14 @@ fun CuteCard(
                 .fillMaxSize()
         ) {
             Column(
-                verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxHeight()
             ) {
-                Title2Text(text, Modifier.padding(16.dp), Color.Black)
+                BodyText(text, Modifier.padding(16.dp), Color.Black)
 
-                Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                Row(horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth().padding(4.dp)
+                ) {
                     Icon(icon, "", tint = Color.Black)
                 }
             }
