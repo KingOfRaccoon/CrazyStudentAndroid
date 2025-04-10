@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -71,16 +72,25 @@ val data = listOf(
 
 Мы ищем Backend-разработчика в Сybersport.ru — крупнейшее русскоязычное СМИ о киберспорте, где собрано все самое интересное и захватывающее из мира киберспорта и видеоигр. У нас небольшая команда, где каждый влияет на продукт. Работать можно и удаленно, и в офисе.
 
-Требования
-- практический опыт разработки на Symfony 5+ от трех лет;
-- хорошее знание PHP 8+ и Golang (опыт разработки от года);
-- опыт использования PostgreSQL;
-- владение ООП, понимание принципов SOLID;
-- опыт разработки высоконагруженных систем;
-- опыт работы с брокером сообщений Kafka;
-- понимание DevOps и CI/CD;
-- знание Redis;
-- базовое использование ClickHouse.""",
+Требования:
+· практический опыт разработки на Symfony 5+ от трех лет;
+· хорошее знание PHP 8+ и Golang (опыт разработки от года);
+· опыт использования PostgreSQL;
+· владение ООП, понимание принципов SOLID;
+· опыт разработки высоконагруженных систем;
+· опыт работы с брокером сообщений Kafka;
+· понимание DevOps и CI/CD;
+· знание Redis;
+· базовое использование ClickHouse.
+
+Обязанности:
+· поддержка сервисов, реализованных на Golang & PHP (Symfony);
+· интеграция с партнерскими сервисами;
+· шардирование postgresql (написание обработчиков по логам/триггерам);
+· оптимизация кодовой базы ООП/DRY (вынесение логик в отдельные бандлы/пакеты);
+· реализация продуктовых проектов для киберспортивных турниров;
+· написание документации к кодовой базе.
+""",
         info = listOf("Полный день", "Опыт 1 года", "Офис"),
         redirect = ("https://vk.com/jobs?w=job1119")
     ),
@@ -95,7 +105,7 @@ fun InternshipScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 16.dp),
+            .padding(16.dp),
     ) {
         LazyRow(
             userScrollEnabled = true,
@@ -120,11 +130,12 @@ fun InternshipScreen() {
                 }
             }
         }
+        Spacer(Modifier.height(18.dp))
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+
         ) {
             items(vacancies) {
                 InternshipCard(
@@ -154,7 +165,7 @@ fun InternshipCard(
         ) {
             Card(
                 modifier = Modifier.size(50.dp),
-                colors = CardDefaults.cardColors(),
+                colors = CardDefaults.cardColors(Color.White),
                 shape = RoundedCornerShape(16.dp),
             ) {
                 Icon(
