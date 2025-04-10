@@ -11,6 +11,7 @@ sealed class ScreenRoutes {
         MainStudent,
         Schedule,
         Events,
+        AddEvent,
         Profile,
         StudyPlane,
         AdditionalEducation,

@@ -49,13 +49,13 @@ import ru.kingofraccoons.crazystudent.NavigationFun
 import ru.kingofraccoons.crazystudent.R
 import ru.kingofraccoons.crazystudent.presentation.elements.HeadlineText
 import ru.kingofraccoons.crazystudent.presentation.elements.Title2Text
-import ru.kingofraccoons.crazystudent.presentation.screens.start.FilterDropdownFieldWithInlineSearch
-import ru.kingofraccoons.crazystudent.presentation.screens.start.ItemAvatar
-import ru.kingofraccoons.crazystudent.presentation.screens.start.getImages
+import ru.kingofraccoons.crazystudent.presentation.screens.start.authorization.FilterDropdownFieldWithInlineSearch
+import ru.kingofraccoons.crazystudent.presentation.screens.start.authorization.ItemAvatar
+import ru.kingofraccoons.crazystudent.presentation.screens.start.authorization.getImages
 import kotlin.reflect.KFunction1
 
 @Composable
-fun MutableStateFlow<String>.getStateAndSetter(): Pair<String, KFunction1<String, Unit>> {
+fun <T> MutableStateFlow<T>.getStateAndSetter(): Pair<T, KFunction1<T, Unit>> {
     return (this.collectAsState().value to ::value::set)
 }
 
@@ -297,6 +297,36 @@ fun RegistrationScreen(
                             )
                             .clip(RoundedCornerShape(size = 30.dp))
                     )
+                }
+
+                item {
+                    Button(
+                        navigateToAuthentication,
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(size = 59.dp))
+                            .shadow(
+                                5.dp,
+                                RoundedCornerShape(size = 59.dp),
+                                true,
+                                Color(0x8CFFFFFF),
+                                Color(0x8CFFFFFF)
+                            ),
+                        colors = ButtonDefaults.buttonColors(Color(0xFFE1E1E1))
+                    ) {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(4.dp), Arrangement.SpaceBetween
+                        ) {
+                            Title2Text("Авторизация", Modifier, color = Color.Black)
+                            Image(
+                                painterResource(R.drawable.arrow_right),
+                                null,
+                                Modifier.defaultMinSize(24.dp, 24.dp)
+                            )
+                        }
+                    }
                 }
 
                 item {

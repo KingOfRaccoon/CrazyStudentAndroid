@@ -46,7 +46,7 @@ class Postman() {
         route: String,
         headers: Map<String, Any> = mapOf(),
         arguments: Map<String, Any?> = mapOf(),
-        contentType: ContentType = Json
+        contentType: ContentType = Json,
     ): Resource<T> {
         semaphore.withPermit {
             println("get url $baseUrl$route")
@@ -156,7 +156,7 @@ class Postman() {
         route: String,
         parameters: Parameters,
         headers: Map<String, Any> = mapOf(),
-        contentType: ContentType = Json
+        contentType: ContentType = Json,
     ): Resource<T> {
         semaphore.withPermit {
             println("get url $baseUrl$route")
@@ -187,7 +187,7 @@ class Postman() {
         route: String,
         headers: Map<String, Any> = mapOf(),
         arguments: List<PartData> = listOf(),
-        contentType: ContentType = Json
+        contentType: ContentType = Json,
     ): Resource<T> {
         semaphore.withPermit {
             println("get url $baseUrl$route")

@@ -1,4 +1,4 @@
-package ru.kingofraccoons.crazystudent.presentation.screens.start
+package ru.kingofraccoons.crazystudent.presentation.screens.start.authorization
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
@@ -17,13 +17,11 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -46,6 +44,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -59,17 +59,19 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.russhwolf.settings.Settings
-import com.russhwolf.settings.set
+import org.koin.compose.koinInject
 import ru.kingofraccoons.crazystudent.NavigationFun
 import ru.kingofraccoons.crazystudent.R
 import ru.kingofraccoons.crazystudent.domain.entity.response.timetable.FilterUnit
 import ru.kingofraccoons.crazystudent.presentation.elements.HeadlineText
 import ru.kingofraccoons.crazystudent.presentation.elements.SubheadText
 import ru.kingofraccoons.crazystudent.presentation.elements.Title2Text
+import ru.kingofraccoons.crazystudent.presentation.screens.start.registration.getStateAndSetter
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
@@ -79,14 +81,18 @@ import ru.kingofraccoons.crazystudent.presentation.elements.Title2Text
 fun AuthorizationScreen(
     navigateToRegistration: NavigationFun,
     navigateToMainStudent: NavigationFun,
-    navigateToMainEnrollee: NavigationFun,
+    viewModel: AuthorizationViewModel = koinInject()
 ) {
     val settings = Settings()
-    val (name, setName) = remember { mutableStateOf("") }
-    val (surname, setSurname) = remember { mutableStateOf("") }
-    val (filter, setFilter) = remember { mutableStateOf("") }
-    var chips by remember { mutableStateOf(List(10) { "Test $it" }) }
+    val (login, setLogin) = viewModel.login.getStateAndSetter()
+    val (password, setPassword) = viewModel.password.getStateAndSetter()
     var image by remember { mutableIntStateOf(getImages()[settings.getInt("image", 0)]) }
+    val user by viewModel.user.collectAsState()
+
+    LaunchedEffect(user) {
+        if (user.isSuccess())
+            navigateToMainStudent()
+    }
 
     Scaffold(
         Modifier
@@ -110,6 +116,7 @@ fun AuthorizationScreen(
             LazyColumn(
                 Modifier
                     .fillMaxSize()
+                    .weight(1f)
                     .padding(it)
                     .padding(horizontal = 16.dp, vertical = 4.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -144,121 +151,115 @@ fun AuthorizationScreen(
                         }
                     }
                 }
-                item {
-                    getImages().chunked(5).forEachIndexed { index, drawableRource ->
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            Arrangement.spacedBy(8.dp)
-                        ) {
-                            drawableRource.forEach {
-                                ItemAvatar(it, it == image) {
-                                    image = it
-                                    settings["image"] = index
-                                }
-                            }
-                        }
 
-                        if (index % 2 == 0) Spacer(Modifier.height(8.dp))
+                item {
+                    TextField(
+                        login,
+                        setLogin,
+                        Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = Color(0xFF2B2C34),
+                                shape = RoundedCornerShape(size = 30.dp)
+                            )
+                            .clip(RoundedCornerShape(size = 30.dp)),
+                        placeholder = { HeadlineText("Логин", Modifier, Color(0x99FFFFFF)) },
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color(0xFF2B2C34),
+                            focusedContainerColor = Color(0xFF2B2C34),
+                            focusedIndicatorColor = Color(0xFF2B2C34),
+                            unfocusedIndicatorColor = Color(0xFF2B2C34),
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White
+                        )
+                    )
+                }
+
+                item {
+                    TextField(
+                        password,
+                        setPassword,
+                        Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = Color(0xFF2B2C34),
+                                shape = RoundedCornerShape(size = 30.dp)
+                            )
+                            .clip(RoundedCornerShape(size = 30.dp)),
+                        placeholder = { HeadlineText("Пароль", Modifier, Color(0x99FFFFFF)) },
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color(0xFF2B2C34),
+                            focusedContainerColor = Color(0xFF2B2C34),
+                            focusedIndicatorColor = Color(0xFF2B2C34),
+                            unfocusedIndicatorColor = Color(0xFF2B2C34),
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White
+                        ),
+                        visualTransformation = PasswordVisualTransformation()
+                    )
+                }
+            }
+
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                Arrangement.spacedBy(16.dp)
+            ) {
+                Button(
+                    navigateToRegistration,
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(size = 59.dp))
+                        .shadow(
+                            5.dp,
+                            RoundedCornerShape(size = 59.dp),
+                            true,
+                            Color(0x8CFFFFFF),
+                            Color(0x8CFFFFFF)
+                        ),
+                    colors = ButtonDefaults.buttonColors(Color(0xFFE1E1E1))
+                ) {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp), Arrangement.SpaceBetween
+                    ) {
+                        Title2Text("Регистрация", Modifier, color = Color.Black)
+                        Image(
+                            painterResource(R.drawable.arrow_right),
+                            null,
+                            Modifier.defaultMinSize(24.dp, 24.dp)
+                        )
                     }
                 }
 
-                item {
-                    Title2Text(
-                        "Личные данные",
+
+                Button(
+                    viewModel::loginUser,
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(size = 59.dp))
+                        .shadow(
+                            5.dp,
+                            RoundedCornerShape(size = 59.dp),
+                            true,
+                            Color(0x8CFFFFFF),
+                            Color(0x8CFFFFFF)
+                        ),
+                    colors = ButtonDefaults.buttonColors(Color(0xFF70DDFF))
+                ) {
+                    Row(
                         Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp)
-                    )
-                }
-
-                item {
-                    TextField(
-                        name,
-                        setName,
-                        Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = Color(0xFF2B2C34),
-                                shape = RoundedCornerShape(size = 30.dp)
-                            )
-                            .clip(RoundedCornerShape(size = 30.dp)),
-                        placeholder = { HeadlineText("Имя", Modifier, Color(0x99FFFFFF)) },
-                        colors = TextFieldDefaults.colors(
-                            unfocusedContainerColor = Color(0xFF2B2C34),
-                            focusedContainerColor = Color(0xFF2B2C34),
-                            focusedIndicatorColor = Color(0xFF2B2C34),
-                            unfocusedIndicatorColor = Color(0xFF2B2C34),
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
-                        )
-                    )
-                }
-
-                item {
-                    TextField(
-                        surname,
-                        setSurname,
-                        Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = Color(0xFF2B2C34),
-                                shape = RoundedCornerShape(size = 30.dp)
-                            )
-                            .clip(RoundedCornerShape(size = 30.dp)),
-                        placeholder = { HeadlineText("Фамилия", Modifier, Color(0x99FFFFFF)) },
-                        colors = TextFieldDefaults.colors(
-                            unfocusedContainerColor = Color(0xFF2B2C34),
-                            focusedContainerColor = Color(0xFF2B2C34),
-                            focusedIndicatorColor = Color(0xFF2B2C34),
-                            unfocusedIndicatorColor = Color(0xFF2B2C34),
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
-                        )
-                    )
-                }
-
-//                item {
-//                    FilterDropdownFieldWithInlineSearch(
-//                        filter,
-//                        setFilter,
-//                        listOf("123", "234", "345"),
-//                        Modifier
-//                            .fillMaxWidth()
-//                            .background(
-//                                color = Color(0xFF2B2C34),
-//                                shape = RoundedCornerShape(size = 30.dp)
-//                            )
-//                            .clip(RoundedCornerShape(size = 30.dp))
-//                    )
-//                }
-
-                item {
-                    Button(
-                        navigateToMainStudent,
-                        Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(size = 59.dp))
-                            .shadow(
-                                5.dp,
-                                RoundedCornerShape(size = 59.dp),
-                                true,
-                                Color(0x8CFFFFFF),
-                                Color(0x8CFFFFFF)
-                            ),
-                        colors = ButtonDefaults.buttonColors(Color(0xFF70DDFF))
+                            .padding(4.dp), Arrangement.SpaceBetween
                     ) {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(4.dp), Arrangement.SpaceBetween
-                        ) {
-                            Title2Text("Создать аккаунт", Modifier, color = Color.Black)
-                            Image(
-                                painterResource(R.drawable.arrow_right),
-                                null,
-                                Modifier.defaultMinSize(24.dp, 24.dp)
-                            )
-                        }
+                        Title2Text("Войти в аккаунт", Modifier, color = Color.Black)
+                        Image(
+                            painterResource(R.drawable.arrow_right),
+                            null,
+                            Modifier.defaultMinSize(24.dp, 24.dp)
+                        )
                     }
                 }
             }

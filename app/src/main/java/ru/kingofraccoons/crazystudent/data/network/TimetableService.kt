@@ -3,8 +3,8 @@ package ru.kingofraccoons.crazystudent.data.network
 import ru.kingofraccoons.crazystudent.data.util.Postman
 import ru.kingofraccoons.crazystudent.domain.entity.request.EventRequest
 import ru.kingofraccoons.crazystudent.domain.entity.request.EventUpdate
-import ru.kingofraccoons.crazystudent.domain.entity.response.EventResponse
 import ru.kingofraccoons.crazystudent.domain.entity.response.PlanResponse
+import ru.kingofraccoons.crazystudent.domain.entity.response.TimetableResponse
 import ru.kingofraccoons.crazystudent.domain.entity.response.timetable.Group
 import ru.kingofraccoons.crazystudent.domain.entity.response.timetable.Teacher
 import ru.kingofraccoons.crazystudent.domain.util.Resource
@@ -18,7 +18,7 @@ class TimetableService(private val postman: Postman) {
     private val groupTag = "get-groups"
     private val teacherTag = "get-preps"
 
-    suspend fun getTimetable(userId: Int, date: String): Resource<PlanResponse> {
+    suspend fun getPlan(userId: Long, date: String): Resource<PlanResponse> {
         return postman.get(
             baseUrl,
             timetableTag,
@@ -34,11 +34,15 @@ class TimetableService(private val postman: Postman) {
         return postman.get(timetableUrl, teacherTag)
     }
 
-    suspend fun getEvents(): Resource<List<EventResponse>> {
-        return postman.get(baseUrl, eventsTag)
+    suspend fun getTimetable(userId: Long, date: String): Resource<TimetableResponse> {
+        return postman.get(
+            baseUrl,
+            eventsTag,
+            arguments = mapOf("userId" to userId, "date" to date)
+        )
     }
 
-    suspend fun addEvents(userId: Int, eventRequest: EventRequest): Resource<String> {
+    suspend fun addEvents(userId: Long, eventRequest: EventRequest): Resource<String> {
         return postman.post(baseUrl, eventsTag, eventRequest, arguments = mapOf("userId" to userId))
     }
 

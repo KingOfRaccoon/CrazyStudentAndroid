@@ -12,9 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.compose.rememberNavController
 import ru.kingofraccoons.crazystudent.R
 import ru.kingofraccoons.crazystudent.presentation.routes.GroupRoutes
 import ru.kingofraccoons.crazystudent.presentation.routes.ScreenRoutes
@@ -23,80 +24,18 @@ import ru.kingofraccoons.crazystudent.presentation.screens.main.profile.student.
 import ru.kingofraccoons.crazystudent.presentation.screens.main.profile.student.RecordBookScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.profile.student.StudentProfileScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.profile.student.StudyPlaneScreen
-import ru.kingofraccoons.crazystudent.presentation.screens.main.schedule.EventsScreen
+import ru.kingofraccoons.crazystudent.presentation.screens.main.schedule.addevent.AddEventsScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.service.InternshipScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.service.SelectHousingScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.service.ServicesScreen
 import ru.kingofraccoons.crazystudent.presentation.screens.main.vacancy.VacanciesScreen
-import ru.skittens.prostoleti.presentation.screens.main.schedule.ScheduleScreen
-
-fun NavGraphBuilder.StudentMainNavigation(navigator: NavHostController) {
-    navigation(ScreenRoutes.Student.Schedule.name, GroupRoutes.ScheduleStudent.name) {
-        composable(ScreenRoutes.Student.Schedule.name) {
-            ScheduleScreen(
-                { navigator.navigate(ScreenRoutes.Student.Events.name) },
-                { navigator.navigate(GroupRoutes.ServicesStudent.name) },
-                { navigator.navigate(GroupRoutes.ProfileStudent.name) })
-        }
-
-        composable(ScreenRoutes.Student.Events.name) {
-            EventsScreen()
-        }
-    }
-
-    navigation(ScreenRoutes.Student.Profile.name, GroupRoutes.ProfileStudent.name) {
-        composable(ScreenRoutes.Student.Profile.name) {
-            StudentProfileScreen(
-                { navigator.navigate(ScreenRoutes.Student.StudyPlane.name) },
-                { navigator.navigate(ScreenRoutes.Student.AdditionalEducation.name) },
-                { navigator.navigate(ScreenRoutes.Student.RecordBook.name) },
-                { navigator.navigate(ScreenRoutes.Student.Preferences.name) }
-            )
-        }
-
-        composable(ScreenRoutes.Student.StudyPlane.name) {
-            StudyPlaneScreen()
-        }
-
-        composable(ScreenRoutes.Student.AdditionalEducation.name) {
-            AdditionalEducationScreen()
-        }
-
-        composable(ScreenRoutes.Student.RecordBook.name) {
-            RecordBookScreen()
-        }
-
-        composable(ScreenRoutes.Student.Preferences.name) {
-            PreferencesScreen()
-        }
-    }
-
-    navigation(ScreenRoutes.Student.Services.name, GroupRoutes.ServicesStudent.name) {
-        composable(ScreenRoutes.Student.Services.name) {
-            ServicesScreen(
-                { navigator.navigate(ScreenRoutes.Student.Vacancies.name) },
-                { navigator.navigate(ScreenRoutes.Student.Internship.name) },
-                { navigator.navigate(ScreenRoutes.Student.SelectHousing.name) },
-            )
-        }
-
-        composable(ScreenRoutes.Student.Internship.name) {
-            InternshipScreen()
-        }
-
-        composable(ScreenRoutes.Student.Vacancies.name) {
-            VacanciesScreen()
-        }
-
-        composable(ScreenRoutes.Student.SelectHousing.name) {
-            SelectHousingScreen()
-        }
-    }
-}
+import ru.kingofraccoons.crazystudent.presentation.screens.main.schedule.ScheduleScreen
+import ru.kingofraccoons.crazystudent.presentation.screens.main.schedule.plan.PlanScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavGraphBuilder.MainNavigation(navigator: NavHostController) {
+fun NavGraphBuilder.MainNavigation() {
+    val navigator = rememberNavController()
     val currentEntry = navigator.currentDestination?.route.orEmpty()
 
     Scaffold(
@@ -125,8 +64,72 @@ fun NavGraphBuilder.MainNavigation(navigator: NavHostController) {
             }
         }
     ) {
-//        NavHost(navigator, GroupRoutes.ScheduleStudent.name) {
-        StudentMainNavigation(navigator)
-//        }
+        NavHost(navigator, GroupRoutes.ScheduleStudent.name) {
+            navigation(ScreenRoutes.Student.Schedule.name, GroupRoutes.ScheduleStudent.name) {
+                composable(ScreenRoutes.Student.Schedule.name) {
+                    ScheduleScreen(
+                        { navigator.navigate(ScreenRoutes.Student.AddEvent.name) },
+                        { navigator.navigate(ScreenRoutes.Student.StudyPlane.name) },
+                        { navigator.navigate(GroupRoutes.ProfileStudent.name) })
+                }
+
+                composable(ScreenRoutes.Student.AddEvent.name) {
+                    AddEventsScreen(navigator::popBackStack)
+                }
+
+                composable(ScreenRoutes.Student.StudyPlane.name) {
+                    PlanScreen(navigator::popBackStack)
+                }
+            }
+
+            navigation(ScreenRoutes.Student.Profile.name, GroupRoutes.ProfileStudent.name) {
+                composable(ScreenRoutes.Student.Profile.name) {
+                    StudentProfileScreen(
+                        { navigator.navigate(ScreenRoutes.Student.StudyPlane.name) },
+                        { navigator.navigate(ScreenRoutes.Student.AdditionalEducation.name) },
+                        { navigator.navigate(ScreenRoutes.Student.RecordBook.name) },
+                        { navigator.navigate(ScreenRoutes.Student.Preferences.name) }
+                    )
+                }
+
+                composable(ScreenRoutes.Student.StudyPlane.name) {
+                    StudyPlaneScreen()
+                }
+
+                composable(ScreenRoutes.Student.AdditionalEducation.name) {
+                    AdditionalEducationScreen()
+                }
+
+                composable(ScreenRoutes.Student.RecordBook.name) {
+                    RecordBookScreen()
+                }
+
+                composable(ScreenRoutes.Student.Preferences.name) {
+                    PreferencesScreen()
+                }
+            }
+
+            navigation(ScreenRoutes.Student.Services.name, GroupRoutes.ServicesStudent.name) {
+                composable(ScreenRoutes.Student.Services.name) {
+                    ServicesScreen(
+                        { navigator.navigate(ScreenRoutes.Student.Vacancies.name) },
+                        { navigator.navigate(ScreenRoutes.Student.Internship.name) },
+                        { navigator.navigate(ScreenRoutes.Student.SelectHousing.name) },
+                    )
+                }
+
+                composable(ScreenRoutes.Student.Internship.name) {
+                    InternshipScreen()
+                }
+
+                composable(ScreenRoutes.Student.Vacancies.name) {
+                    VacanciesScreen()
+                }
+
+                composable(ScreenRoutes.Student.SelectHousing.name) {
+                    SelectHousingScreen()
+                }
+            }
+        }
     }
 }

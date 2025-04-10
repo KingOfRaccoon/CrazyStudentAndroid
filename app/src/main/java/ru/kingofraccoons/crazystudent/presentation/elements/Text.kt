@@ -24,7 +24,7 @@ fun LargeTitleText(
 @Composable
 fun Title1Text(
     text: String,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     color: Color = Color.White,
     textAlign: TextAlign = TextAlign.Start
 ) = Text(
@@ -80,15 +80,17 @@ fun HeadlineText(
 @Composable
 fun BodyText(
     text: String,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     color: Color = Color.White,
-    textAlign: TextAlign = TextAlign.Start
+    textAlign: TextAlign = TextAlign.Start,
+    minLines: Int = 1
 ) = Text(
     text,
     modifier,
     color,
     textAlign = textAlign,
-    style = MaterialTheme.typography.bodyMedium
+    style = MaterialTheme.typography.bodyMedium,
+    minLines = minLines
 )
 
 @Composable

@@ -1,10 +1,11 @@
-package ru.skittens.prostoleti.data.util
+package ru.kingofraccoons.crazystudent.data.util
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.isoDayNumber
@@ -13,6 +14,7 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
+import java.util.Calendar
 
 /** DataTime is class for work with times and dates **/
 @Serializable
@@ -22,7 +24,7 @@ open class DataTime(
     var dayOfMonth: Int = 0,
     private var hour: Int = 0,
     private var minute: Int = 0,
-    var dayOfWeek: Int = 0
+    var dayOfWeek: Int = 0,
 ) {
     constructor(localDateTime: LocalDateTime) : this(
         localDateTime.year,
@@ -48,7 +50,17 @@ open class DataTime(
         }
     }
 
-    fun getTime() = "${if (hour > 9) hour else "0$hour"}:" + if (minute > 9) "$minute" else "0$minute"
+    constructor(calendar: Calendar) : this(
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH) + 1,
+        calendar.get(Calendar.DATE),
+        calendar.get(Calendar.HOUR_OF_DAY),
+        calendar.get(Calendar.MINUTE),
+        calendar.get(Calendar.DAY_OF_WEEK)
+    )
+
+    fun getTime() =
+        "${if (hour > 9) hour else "0$hour"}:" + if (minute > 9) "$minute" else "0$minute"
 
     /** Return tomorrow/today/yesterday and day, mouth and year **/
     fun getDate(): String {
@@ -90,7 +102,16 @@ open class DataTime(
     /** Return date for timetable **/
     fun forTimeTable() = "${mouth}-${dayOfMonth}-${year}"
 
-    fun getIsoFormat() = "$year-${if (mouth > 9) mouth else "0$mouth"}-${if (dayOfMonth > 9) dayOfMonth else "0$dayOfMonth"}"
+    fun getIsoFormat() =
+        "$year-${if (mouth > 9) mouth else "0$mouth"}-${if (dayOfMonth > 9) dayOfMonth else "0$dayOfMonth"}"
+
+    fun getDateAndTimeISO(): String {
+        return "${year}-${getMonth(mouth)}-${getMonth(dayOfMonth)}T${getMonth(hour)}:${
+            getMonth(
+                minute
+            )
+        }:00"
+    }
 
     /** Return date with time **/
     fun getDateAndTime() = getDate() + ", " + getTime()
@@ -146,12 +167,24 @@ open class DataTime(
         return "$dayOfMonth.$mouth.$year"
     }
 
-    fun getTimeInMilliSeconds() = LocalDateTime(year, mouth, dayOfMonth, hour, minute).toInstant(TimeZone.currentSystemDefault()).epochSeconds
+    fun getTimeInMilliSeconds() = LocalDateTime(
+        year,
+        mouth,
+        dayOfMonth,
+        hour,
+        minute
+    ).toInstant(TimeZone.currentSystemDefault()).epochSeconds
 
-    fun endPair(duration: Double = 1.0) = DataTime(LocalDateTime(year, mouth, dayOfMonth, hour, minute)
-        .toInstant(TimeZone.currentSystemDefault())
-        .plus((90 * duration).toInt(), DateTimeUnit.MINUTE, TimeZone.currentSystemDefault())
-        .toLocalDateTime(TimeZone.currentSystemDefault()))
+    fun toLocalDateTime() = LocalDateTime(year, mouth, dayOfMonth, hour, minute)
+    fun toLocalDate() = LocalDate(year, mouth, dayOfMonth)
+    fun toLocalTime() = LocalTime(hour, minute)
+
+    fun endPair(duration: Double = 1.0) = DataTime(
+        LocalDateTime(year, mouth, dayOfMonth, hour, minute)
+            .toInstant(TimeZone.currentSystemDefault())
+            .plus((90 * duration).toInt(), DateTimeUnit.MINUTE, TimeZone.currentSystemDefault())
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+    )
 
     fun getDayAndMouth() = "$dayOfMonth ${getMouthForTime(mouth)}"
 
@@ -168,6 +201,13 @@ open class DataTime(
         return 0
     }
 
+    fun addSeconds(seconds: Int): DataTime {
+        return DataTime(LocalDateTime(toLocalDate(), toLocalTime().addSeconds(seconds)))
+    }
+
+    fun addMinutes(minutes: Int): DataTime {
+        return DataTime(LocalDateTime(toLocalDate(), toLocalTime().addMinutes(minutes)))
+    }
 
     /** Static fields and functions **/
     companion object {
@@ -246,4 +286,12 @@ fun LocalDateTime.getWeekNumber(): Int {
         else -> -(8 - firstDayOfYearDayOfWeek)
     }
     return (daysFromFirstDay + adjustment) / 7 + 1
+}
+
+fun LocalTime.addSeconds(second: Int): LocalTime {
+    return LocalTime.fromSecondOfDay(toSecondOfDay() + second)
+}
+
+fun LocalTime.addMinutes(minutes: Int): LocalTime {
+    return LocalTime.fromSecondOfDay(toSecondOfDay() + minutes * 60)
 }

@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Schedule(
     val period: Long? = null,
-    val preciseTime: String,
-    val startTime: Int,
-    val startTimeUtc: Int,
+    val preciseTime: String? = null,
+    val startTime: Int? = null,
+    val startTimeUtc: Int? = null,
     val type: String
 )

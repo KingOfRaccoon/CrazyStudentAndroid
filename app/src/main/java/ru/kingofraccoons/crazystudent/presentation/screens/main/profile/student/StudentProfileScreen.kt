@@ -42,6 +42,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import org.koin.compose.koinInject
 import ru.kingofraccoons.crazystudent.NavigationFun
 import ru.kingofraccoons.crazystudent.presentation.elements.BodyText
 import ru.kingofraccoons.crazystudent.presentation.elements.Caption1Text
@@ -59,6 +61,7 @@ import ru.kingofraccoons.crazystudent.ui.theme.CrazyStudentTheme
 import ru.kingofraccoons.crazystudent.R
 import ru.kingofraccoons.crazystudent.presentation.elements.BodyText
 import ru.kingofraccoons.crazystudent.presentation.elements.Caption1Text
+import ru.kingofraccoons.crazystudent.presentation.elements.Title3Text
 import ru.kingofraccoons.crazystudent.ui.theme.CrazyStudentTheme
 
 @Composable
@@ -67,7 +70,9 @@ fun StudentProfileScreen(
     navigateToAdditionEducation: NavigationFun,
     navigateToRecordBook: NavigationFun,
     navigateToPreferences: NavigationFun,
+    viewModel: ProfileViewModel = koinInject()
 ) {
+    val user = viewModel.user.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,9 +83,8 @@ fun StudentProfileScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text(
-            text = "Василий Петров",
-            style = MaterialTheme.typography.headlineMedium,
+        Title3Text(
+            text = user.value.data?.let { "${it.name} ${it.lastname}"}.orEmpty(),
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
@@ -89,7 +93,7 @@ fun StudentProfileScreen(
             description = "выбери по душе",
             color = Color(0xFF85FFA0),
             icon = Icons.Outlined.DateRange,
-            onClick = navigateToRecordBook
+            onClick = {  }
         )
 
         TaskCard(
@@ -97,7 +101,7 @@ fun StudentProfileScreen(
             description = "добавь новые",
             color = Color(0xFF85FFA0),
             icon = Icons.Outlined.Favorite,
-            onClick = navigateToPreferences
+            onClick = {  }
         )
 
         TaskCard(
@@ -105,7 +109,7 @@ fun StudentProfileScreen(
             description = "будь в курсе",
             color = Color(0xFF70DDFF),
             icon = Icons.Outlined.Info,
-            onClick = navigateToStudyPlane
+            onClick = {  }
         )
 
         TaskCard(
@@ -113,7 +117,7 @@ fun StudentProfileScreen(
             description = "подбери направление",
             color = Color(0xFF70DDFF),
             icon = Icons.Outlined.Search,
-            onClick = { TODO()}
+            onClick = { }
         )
 
         TaskCard(
@@ -121,7 +125,7 @@ fun StudentProfileScreen(
             description = "исследуй новое",
             color = Color(0xFFFFDFF4),
             icon = Icons.Outlined.Place,
-            onClick = navigateToAdditionEducation
+            onClick = {  }
         )
     }
 }
@@ -132,7 +136,9 @@ fun TaskCard(
     onClick: () -> Unit = {},
 ) {
     Card(
-        modifier = Modifier.padding(vertical = 4.dp).clickable { onClick() },
+        modifier = Modifier
+            .padding(vertical = 4.dp)
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(Color(0xFF2B2C34)),
         shape = RoundedCornerShape(24.dp),
     ) {

@@ -6,6 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,7 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import ru.kingofraccoons.crazystudent.presentation.screens.start.AuthorizationScreen
+import ru.kingofraccoons.crazystudent.presentation.screens.start.authorization.AuthorizationScreen
 import ru.kingofraccoons.crazystudent.presentation.navigation.EnrolleeMainNavigation
 import ru.kingofraccoons.crazystudent.presentation.navigation.MainNavigation
 import ru.kingofraccoons.crazystudent.presentation.theme.AppTheme
@@ -42,6 +45,7 @@ fun App() = AppTheme {
         navigator, GroupRoutes.Start.name,
         Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .background(Color.Black)
     ) {
         navigation(ScreenRoutes.Start.Splash.name, GroupRoutes.Start.name) {
@@ -56,7 +60,6 @@ fun App() = AppTheme {
                 AuthorizationScreen(
                     { navigator.navigate(ScreenRoutes.Start.Registration.name) },
                     { navigator.navigate(ScreenRoutes.Student.MainStudent.name) },
-                    { navigator.navigate(ScreenRoutes.Enrollee.MainEnrollee.name) }
                 )
             }
             composable(ScreenRoutes.Start.Registration.name) {
@@ -68,7 +71,7 @@ fun App() = AppTheme {
             }
         }
         composable(ScreenRoutes.Student.MainStudent.name) {
-            MainNavigation(navigator)
+            MainNavigation()
         }
         composable(ScreenRoutes.Enrollee.MainEnrollee.name) {
             EnrolleeMainNavigation(navigator)

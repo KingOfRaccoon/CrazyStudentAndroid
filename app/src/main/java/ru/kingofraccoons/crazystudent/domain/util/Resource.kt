@@ -21,6 +21,7 @@ sealed class Resource<T>(
 
 
     fun isSuccess() = this is Success
+    fun isError() = this is Error
 
     /** Static fields **/
     enum class ErrorsRequest(val desc: String) {
